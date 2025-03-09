@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Dynamic Roleplay Meos</title>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Login</h2>
+        <h3>Voer je gegevens in</h3>
+
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Gebruikersnaam" required>
+            <input type="password" id="password" placeholder="Wachtwoord" required>
+            <button type="submit">INLOGGEN</button>
+        </form>
+        <p id="loginMessage"></p>
+        <a href="register.html">Nog geen account? Registreer hier</a>
+    </div>
+
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        let response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        let data = await response.json();
+        let message = document.getElementById("loginMessage");
+
+        if (data.success) {
+            message.style.color = "green";
+            message.textContent = `Login succesvol! Je rang: ${data.rank}`;
+            setTimeout(() => {
+                window.location.href = "dashboard.html"; // Redirect na succes
+            }, 2000);
+        } else {
+            message.style.color = "red";
+            message.textContent = "Fout: " + data.message;
+        }
+    });
+    </script>
+</body>
+</html>

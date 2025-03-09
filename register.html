@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Registreer</title>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Registreren</h2>
+        <h3>Maak een account aan</h3>
+
+        <form id="registerForm">
+            <input type="text" id="regUsername" placeholder="Gebruikersnaam" required>
+            <input type="password" id="regPassword" placeholder="Wachtwoord" required>
+            <button type="submit">REGISTREER</button>
+        </form>
+        <p id="registerMessage"></p>
+        <a href="index.html">Al een account? Log in</a>
+    </div>
+
+    <script>
+    document.getElementById("registerForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        let username = document.getElementById("regUsername").value;
+        let password = document.getElementById("regPassword").value;
+
+        let response = await fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        let data = await response.json();
+        let message = document.getElementById("registerMessage");
+
+        if (data.success) {
+            message.style.color = "green";
+            message.textContent = "Registratie geslaagd! Je kunt nu inloggen.";
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 2000);
+        } else {
+            message.style.color = "red";
+            message.textContent = "Fout: " + data.message;
+        }
+    });
+    </script>
+</body>
+</html>
